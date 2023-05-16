@@ -2,7 +2,6 @@
 //using AndroidBluetooth.Platforms.Android;
 //using AndroidX.Core.App;
 //using AndroidX.Core.Content;
-using AndroidBluetooth.Platforms.Android;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 //using System;
@@ -12,21 +11,27 @@ namespace AndroidBluetooth;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+	private IDevice Tag = null;
 
 	public MainPage()
 	{
 		InitializeComponent();
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
+	private async void OnCounterClicked(object sender, EventArgs e)
 	{
-		count++;
+		if (Tag != null)
+		{
+			var rssiUpdateResult = await Tag.UpdateRssiAsync();
+			int value = Tag.Rssi;
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
+			CounterBtn.Text = $""+value;
+		}
 		else
-			CounterBtn.Text = $"Clicked {count} times";
+		{
+			CounterBtn.Text = $"No Tag";
+		}
+		
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 	}
@@ -34,21 +39,22 @@ public partial class MainPage : ContentPage
 	private async Task<bool> CheckForBluetoothPermission()
 	{
 #if ANDROID
-		var status = await Permissions.CheckStatusAsync<MyBluetoothPermission>();
+		var status = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();//MyBluetoothPermission
 
 		if (status == PermissionStatus.Granted)
 			return true;
 
-		if (Permissions.ShouldShowRationale<MyBluetoothPermission>())
+		if (Permissions.ShouldShowRationale<Permissions.LocationAlways>())
 		{
 			await Shell.Current.DisplayAlert("Needs permissions", "BECAUSE!!!", "OK");
 		}
 
-		status = await Permissions.RequestAsync<MyBluetoothPermission>();
+		status = await Permissions.RequestAsync<Permissions.LocationAlways>();
 
 		return status == PermissionStatus.Granted;
 #endif
 	}
+	public int Rssi { [Android.Runtime.Register("getRssi", "()I", "")] get; }
 
 	private async void BluetoothDetection_Clicked(object sender, EventArgs e)
 	{
@@ -61,18 +67,35 @@ public partial class MainPage : ContentPage
 
 		//var state = ble.State;
 
-		List<IDevice> deviceList = new List<IDevice>();
+		//List<IDevice> deviceList1 = new List<IDevice>();
+		List<IDevice> deviceList2 = new List<IDevice>();
 
-		adapter.ScanTimeout = 100000;
+		adapter.ScanTimeout = 10000;
 		adapter.ScanMode = ScanMode.Passive;
 
-
 		
-		adapter.DeviceAdvertised += (s, a) => deviceList.Add(a.Device);
-		adapter.DeviceDiscovered += (s, a) => deviceList.Add(a.Device);
+		
+		//adapter.DeviceAdvertised += (s, a) => deviceList1.Add(a.Device);
+		adapter.DeviceDiscovered += (s, a) => deviceList2.Add(a.Device);
 		await adapter.StartScanningForDevicesAsync();
 
-		List<IDevice> asd = adapter.DiscoveredDevices.ToList();
+		//List<IDevice> asd = adapter.DiscoveredDevices.ToList();
+
+		
+
+		foreach (IDevice device in deviceList2)
+		{
+			if (device.Name.Contains("Smart Tag"))
+			{
+				Tag = device;
+
+				var rssiUpdateResult = await device.UpdateRssiAsync();
+				int value = device.Rssi;
+
+				int sdrf = 0;
+			}
+		}
+
 #endif
 		//#if ANDROID
 
