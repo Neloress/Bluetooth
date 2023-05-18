@@ -1,6 +1,11 @@
-﻿using Plugin.BLE;
+﻿
+using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.Exceptions;
+using Plugin.BLE.Android;
 using System;
+using System.Reflection;
+using System.Threading;
 
 namespace AndroidBluetooth;
 
@@ -9,11 +14,20 @@ public partial class MainPage : ContentPage
 	//private IDevice Tag = null;
 	private List<Tuple<long, int>> _values;
 	private bool _runSearch;
+	private List<Beacon> _beacons = new List<Beacon>();
+
 
 	public MainPage()
 	{
+		_beacons.Add(new Beacon(new Vector(0, 0, 0), "4C:62:DC:91:A7:15"));
+		_beacons.Add(new Beacon(new Vector(0, 0, 0), "4C:62:DC:91:A7:15"));
+		_beacons.Add(new Beacon(new Vector(0, 0, 0), "4C:62:DC:91:A7:15"));
+		_beacons.Add(new Beacon(new Vector(0, 0, 0), "4C:62:DC:91:A7:15"));
+
 		InitializeComponent();
 	}
+
+
 
 	private async void CollectData(int stepDuration,List<Tuple<long,int>> values)
 	{
@@ -35,8 +49,21 @@ public partial class MainPage : ContentPage
 
 			foreach (IDevice device in deviceList)
 			{
+				//ParcelUuid[] uuids = device.GetUuids();
 				if (device.Name != null && device.Name.Contains("Smart Tag"))
 				{
+					
+					try
+					{
+						await adapter.ConnectToDeviceAsync(device);
+						var services = await device.GetServicesAsync();
+					}
+					catch (DeviceConnectionException e)
+					{
+						// ... could not connect to device
+					}
+
+
 					int value = device.Rssi;
 					long time = System.DateTime.Now.Ticks;
 					_values.Add(new Tuple<long, int>(time,value));
@@ -106,9 +133,40 @@ public partial class MainPage : ContentPage
 
 		foreach (IDevice device in deviceList)
 		{
+			//BluetoothDevice test = (BluetoothDevice)device.NativeDevice;
+
+			object obj = device.NativeDevice;
+			PropertyInfo propInfo = obj.GetType().GetProperty("Address");
+			string address = (string)propInfo.GetValue(obj, null);
+
+			//if (address== _blackTag)
+			//{
+			//	return new Tuple<bool, int>(true, device.Rssi);
+			//}
+
 			if (device.Name != null && device.Name.Contains("Smart Tag"))
 			{
-				return new Tuple<bool, int>(true, device.Rssi);
+				//return new Tuple<bool, int>(true, device.Rssi);
+				List<string> test = new List<string>();
+				try
+				{
+					await adapter.ConnectToDeviceAsync(device);
+					var services = await device.GetServicesAsync();
+					foreach (IService service in services)
+					{
+						var characteristics = await service.GetCharacteristicsAsync();
+						foreach (Characteristic characteristic in characteristics)
+						{
+
+							test.Add(characteristic.Uuid);
+						}
+					}
+
+				}
+				catch (DeviceConnectionException e)
+				{
+					// ... could not connect to device
+				}
 			}
 		}
 		return new Tuple<bool, int>(false, -1);
