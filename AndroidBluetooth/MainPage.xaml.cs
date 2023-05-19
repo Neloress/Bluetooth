@@ -1,10 +1,13 @@
 ﻿
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Android;
 using System;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 
 namespace AndroidBluetooth;
@@ -29,7 +32,7 @@ public partial class MainPage : ContentPage
 
 
 
-	private async void CollectData(int stepDuration,List<Tuple<long,int>> values)
+	private async void CollectData(int stepDuration, List<Tuple<long, int>> values)
 	{
 		var ble = CrossBluetoothLE.Current;
 		var adapter = CrossBluetoothLE.Current.Adapter;
@@ -41,7 +44,7 @@ public partial class MainPage : ContentPage
 		adapter.ScanMode = ScanMode.LowLatency;//ScanMode.Passive;
 		adapter.DeviceDiscovered += (s, a) => deviceList.Add(a.Device);
 
-		while (_runSearch) 
+		while (_runSearch)
 		{
 			//deviceList = new List<IDevice>();
 			//adapter.DeviceDiscovered += (s, a) => deviceList.Add(a.Device);
@@ -52,7 +55,7 @@ public partial class MainPage : ContentPage
 				//ParcelUuid[] uuids = device.GetUuids();
 				if (device.Name != null && device.Name.Contains("Smart Tag"))
 				{
-					
+
 					try
 					{
 						await adapter.ConnectToDeviceAsync(device);
@@ -66,7 +69,7 @@ public partial class MainPage : ContentPage
 
 					int value = device.Rssi;
 					long time = System.DateTime.Now.Ticks;
-					_values.Add(new Tuple<long, int>(time,value));
+					_values.Add(new Tuple<long, int>(time, value));
 				}
 			}
 		}
@@ -77,7 +80,7 @@ public partial class MainPage : ContentPage
 
 		//if (Tag != null)
 		//{
-			
+
 
 		//	//while (!await Tag.UpdateRssiAsync()) ;
 
@@ -90,7 +93,7 @@ public partial class MainPage : ContentPage
 		//{
 		//	CounterBtn.Text = $"No Tag";
 		//}
-		
+
 
 		//SemanticScreenReader.Announce(CounterBtn.Text);
 	}
@@ -98,7 +101,7 @@ public partial class MainPage : ContentPage
 	private async Task<bool> CheckForBluetoothPermission()
 	{
 		var status = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();
-		
+
 		if (status == PermissionStatus.Granted)
 			return true;
 
@@ -112,7 +115,7 @@ public partial class MainPage : ContentPage
 		return status == PermissionStatus.Granted;
 	}
 
-	private async Task<Tuple<bool,int>> Measure(int timeOut)
+	private async Task<Tuple<bool, int>> Measure(int timeOut)
 	{
 		var ble = CrossBluetoothLE.Current;
 		var adapter = CrossBluetoothLE.Current.Adapter;
@@ -148,19 +151,68 @@ public partial class MainPage : ContentPage
 			{
 				//return new Tuple<bool, int>(true, device.Rssi);
 				List<string> test = new List<string>();
+
+				int streng = device.Rssi;
+
+				
+
 				try
 				{
 					await adapter.ConnectToDeviceAsync(device);
 					var services = await device.GetServicesAsync();
+
+					while (true)
+					{
+						bool rssiUpdateResult = await device.UpdateRssiAsync();
+						int streng2 = device.Rssi;
+					}
+
 					foreach (IService service in services)
 					{
 						var characteristics = await service.GetCharacteristicsAsync();
 						foreach (Characteristic characteristic in characteristics)
 						{
-
-							test.Add(characteristic.Uuid);
+							bool found = false;
+							foreach (string s in test)
+							{
+								if (s == characteristic.Uuid)
+									found = true;
+							}
+							if (!found)
+								test.Add(characteristic.Uuid);
 						}
 					}
+
+					string all = "";
+					foreach (string s in test)
+					{
+						all += s + "\n";
+					}
+
+					string mainDir = FileSystem.Current.AppDataDirectory;
+					string cacheDir = FileSystem.Current.CacheDirectory;
+
+					//string FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "myfile1.txt");
+					string FileName = Path.Combine(mainDir, "myfile1.txt");
+
+					string[] testsets = File.ReadAllLines(FileName);
+
+					int asd = 0;
+					for (int i = 0; i < testsets.Length; i++)
+					{
+						foreach (string s in test)
+						{
+							if (s == testsets[i])
+								asd++;
+						}
+					}
+					//using (StreamWriter sw = File.CreateText(FileName))
+					//{
+					//	foreach (string s in test)
+					//	{
+					//		sw.WriteLine(s);
+					//	}
+					//}
 
 				}
 				catch (DeviceConnectionException e)
@@ -222,7 +274,7 @@ public partial class MainPage : ContentPage
 			if (tuple.Item1)
 			{
 				long time = System.DateTime.Now.Ticks;
-				values.Add(new Tuple<long, int>(time,tuple.Item2));
+				values.Add(new Tuple<long, int>(time, tuple.Item2));
 			}
 		}
 
