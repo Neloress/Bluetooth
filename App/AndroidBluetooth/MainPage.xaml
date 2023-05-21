@@ -142,6 +142,9 @@
             <Entry x:Name="IPpc"
                     Placeholder="IP for sending results"/>
 
+            <Entry x:Name="Portpc"
+                    Placeholder="Port for sending results"/>
+
             <Button
                 x:Name="SendResults"
                 Text="Send Results"

@@ -5,7 +5,9 @@ using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Android;
+using System.Globalization;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 //using System;
 using System.Reflection;
 //using System.Text;
@@ -109,6 +111,12 @@ public partial class MainPage : ContentPage
 		if (beacons == null)
 			return;
 
+		if (!double.TryParse(receiveX.Text, out double X) || !double.TryParse(receiveY.Text, out double Y) || !double.TryParse(receiveZ.Text, out double Z))
+		{
+			Status.Text = "Wrong receiver Pos";
+			return;
+		}
+
 		var ble = CrossBluetoothLE.Current;
 		var adapter = CrossBluetoothLE.Current.Adapter;
 
@@ -158,6 +166,8 @@ public partial class MainPage : ContentPage
 		using (StreamWriter sw = File.CreateText(fileDir))
 		{
 			sw.WriteLine("ScanTime: " + scanTime);
+			sw.WriteLine("ReceiverPos: " + X.ToString(CultureInfo.InvariantCulture)+ " "+Y.ToString(CultureInfo.InvariantCulture)+ " "+Z.ToString(CultureInfo.InvariantCulture));
+			sw.WriteLine();
 			sw.WriteLine("Time;" + beacons[0].ToString()+";" + beacons[1].ToString() + ";" + beacons[2].ToString());
 			for (int i = 0; i < steps; i++)
 			{
@@ -209,13 +219,37 @@ public partial class MainPage : ContentPage
 
 	private async void OnSendResults(object sender, EventArgs e)
 	{
-
+		string message = "";
 
 		string mainDir = FileSystem.Current.AppDataDirectory;
 		foreach (FileInfo fileInfo in (new DirectoryInfo(mainDir)).GetFiles())
 		{
-			try { fileInfo.Delete(); } catch { }
+			string temp = File.ReadAllText(fileInfo.FullName);
+			if (message != "")
+				message += "$";
+
+			message += fileInfo.Name;
+			message += "§";
+			message += temp;
 		}
+
+		try
+		{
+			// Prefer using declaration to ensure the instance is Disposed later.
+			using TcpClient client = new TcpClient(IPpc.Text, int.Parse(Portpc.Text));
+			// Get a client stream for reading and writing.
+			NetworkStream stream = client.GetStream();
+
+			Byte[] data = System.Text.Encoding.ASCII.GetBytes(message + "%");
+			stream.Write(data, 0, data.Length);
+		}
+		catch (Exception error)
+		{
+			Status.Text = "Send Error; "+ error.Message;
+			return;
+		}
+		
+		Status.Text = "Results send";
 	}
 
 	private async void OnDeleteResults(object sender, EventArgs e)
