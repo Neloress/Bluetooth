@@ -5,11 +5,166 @@
 
     <ScrollView>
         <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+            Spacing="10"
+            Padding="00,0"
+            VerticalOptions="Fill">
+            <HorizontalStackLayout
+                 Spacing="10"
+                Padding="10,0"
+                HorizontalOptions="Fill">
 
-            <Image
+                <Entry x:Name="Beacon1Adress"
+                    Placeholder="MacAddress"
+                       WidthRequest="100"/>
+
+                <Entry x:Name="Beacon1X"
+                    Placeholder="X"/>
+
+                <Entry x:Name="Beacon1Y"
+                    Placeholder="Y"/>
+
+                <Entry x:Name="Beacon1Z"
+                    Placeholder="Z"/>
+
+                <Entry x:Name="Beacon1Name"
+                    Placeholder="Name"/>
+
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                 Spacing="10"
+                Padding="10,0"
+                HorizontalOptions="Fill">
+
+                <Entry x:Name="Beacon2Adress"
+                    Placeholder="MacAddress"
+                       WidthRequest="100"/>
+
+                <Entry x:Name="Beacon2X"
+                    Placeholder="X"/>
+
+                <Entry x:Name="Beacon2Y"
+                    Placeholder="Y"/>
+
+                <Entry x:Name="Beacon2Z"
+                    Placeholder="Z"/>
+
+                <Entry x:Name="Beacon2Name"
+                    Placeholder="Name"/>
+
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                 Spacing="10"
+                Padding="10,0"
+                HorizontalOptions="Fill">
+
+                <Entry x:Name="Beacon3Adress"
+                    Placeholder="MacAddress"
+                       WidthRequest="100"/>
+
+                <Entry x:Name="Beacon3X"
+                    Placeholder="X"/>
+
+                <Entry x:Name="Beacon3Y"
+                    Placeholder="Y"/>
+
+                <Entry x:Name="Beacon3Z"
+                    Placeholder="Z"/>
+
+                <Entry x:Name="Beacon3Name"
+                    Placeholder="Name"/>
+
+
+            </HorizontalStackLayout>
+            
+            <HorizontalStackLayout
+                 Spacing="10"
+                Padding="10,0"
+                HorizontalOptions="Fill">
+
+                <Entry x:Name="Beacon4Adress"
+                    Placeholder="MacAddress"
+                       WidthRequest="100"/>
+
+                <Entry x:Name="Beacon4X"
+                    Placeholder="X"/>
+
+                <Entry x:Name="Beacon4Y"
+                    Placeholder="Y"/>
+
+                <Entry x:Name="Beacon4Z"
+                    Placeholder="Z"/>
+
+                <Entry x:Name="Beacon4Name"
+                    Placeholder="Name"/>
+
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                 Spacing="10"
+                Padding="10,0"
+                HorizontalOptions="Fill">
+
+                <Entry x:Name="ScanTime"
+                    Placeholder="Scan time ms"/>
+
+                <Entry x:Name="MeasureTime"
+                    Placeholder="Measure time min"/>
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                 Spacing="10"
+                Padding="10,0"
+                HorizontalOptions="Fill">
+
+                <Entry x:Name="receiveX"
+                    Placeholder="X"/>
+
+                <Entry x:Name="receiveY"
+                    Placeholder="Y"/>
+
+                <Entry x:Name="receiveZ"
+                    Placeholder="Z"/>
+
+            </HorizontalStackLayout>
+
+            <Button
+                x:Name="Start"
+                Text="Start Measuring"
+                Clicked="OnStartMeasuring"
+                HorizontalOptions="Center" />
+
+            <Entry x:Name="IPpc"
+                    Placeholder="IP for sending results"/>
+
+            <Button
+                x:Name="SendResults"
+                Text="Send Results"
+                Clicked="OnSendResults"
+                HorizontalOptions="Center" />
+
+            <Entry x:Name="ClearCheck"
+                    Placeholder="Type delete to enable delete"/>
+
+            <Button
+                x:Name="Delete"
+                Text="Delete Results"
+                Clicked="OnDeleteResults"
+                HorizontalOptions="Center" />
+
+            <Label
+                x:Name="Status"
+                Text="Status"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center"/>
+
+            <!--<Image
                 Source="dotnet_bot.png"
                 SemanticProperties.Description="Cute dot net bot waving hi to you!"
                 HeightRequest="200"
@@ -39,7 +194,7 @@
                 x:Name="BluetoothDetection"
                 Text="Detect Bluetooth Devices"
                 Clicked="BluetoothDetection_Clicked"
-                HorizontalOptions="Center" />
+                HorizontalOptions="Center" />-->
 
         </VerticalStackLayout>
     </ScrollView>

@@ -17,5 +17,11 @@ namespace AndroidBluetooth
 			Y = y; 
 			Z = z;
 		}
+		internal Vector()
+		{
+			X = 0;
+			Y = 0;
+			Z = 0;
+		}
 	}
 }
