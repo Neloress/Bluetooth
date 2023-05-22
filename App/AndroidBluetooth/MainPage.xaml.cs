@@ -6,10 +6,12 @@ using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
 using Plugin.BLE.Android;
 using System.Globalization;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
 //using System;
 using System.Reflection;
+using static Microsoft.Maui.ApplicationModel.Permissions;
 //using System.Text;
 //using System.Threading;
 
@@ -26,7 +28,13 @@ public partial class MainPage : ContentPage
 
 	private void InitValues()
 	{
-		Beacon1Adress.Text = "4C:62:DC:91:A7:15";
+		ScanTime.Text = "10000";
+		MeasureTime.Text = "1";
+		receiveX.Text = "0";
+		receiveY.Text = "0";
+		receiveZ.Text = "0";
+
+		Beacon1Adress.Text = "C0:EE:FB:FF:36:17";
 		Beacon1X.Text = "0";
 		Beacon1Y.Text = "0";
 		Beacon1Z.Text = "0";
@@ -49,6 +57,9 @@ public partial class MainPage : ContentPage
 		Beacon4Y.Text = "0";
 		Beacon4Z.Text = "0";
 		Beacon4Name.Text = "No Name";
+
+		IPpc.Text = "192.168.237.172";
+		Portpc.Text = "13000";
 	}
 
 	private Beacon[] GenerateBeacons()
@@ -116,6 +127,8 @@ public partial class MainPage : ContentPage
 			Status.Text = "Wrong receiver Pos";
 			return;
 		}
+
+
 
 		var ble = CrossBluetoothLE.Current;
 		var adapter = CrossBluetoothLE.Current.Adapter;
@@ -210,15 +223,22 @@ public partial class MainPage : ContentPage
 		}
 		return row;
 	}
-	private string GetTimeStamp()
-	{ 
+
+	internal static string GetTimeStamp()
+	{
 		DateTime dateTime = DateTime.Now;
 
-		return dateTime.Year+"."+dateTime.Month+"."+dateTime.Day+"_"+dateTime.Hour+":"+dateTime.Minute+":"+dateTime.Second+"_"+dateTime.Millisecond;
+		return dateTime.Year + "." + dateTime.Month + "." + dateTime.Day + "_" + dateTime.Hour + "-" + dateTime.Minute + "-" + dateTime.Second + "_" + dateTime.Millisecond;
 	}
 
 	private async void OnSendResults(object sender, EventArgs e)
 	{
+		if (!await CheckForNetworkPermission())
+		{
+			Status.Text = "No network permission";
+			return;
+		}
+
 		string message = "";
 
 		string mainDir = FileSystem.Current.AppDataDirectory;
@@ -229,16 +249,20 @@ public partial class MainPage : ContentPage
 				message += "$";
 
 			message += fileInfo.Name;
-			message += "§";
+			message += "&";
 			message += temp;
 		}
 
 		try
 		{
+			var ipEndPoint = new IPEndPoint(IPAddress.Parse(IPpc.Text), int.Parse(Portpc.Text));
+			using TcpClient tcpClient = new();
+			tcpClient.Connect(ipEndPoint);
+
 			// Prefer using declaration to ensure the instance is Disposed later.
-			using TcpClient client = new TcpClient(IPpc.Text, int.Parse(Portpc.Text));
+			//using TcpClient client = new TcpClient(IPpc.Text, int.Parse(Portpc.Text));
 			// Get a client stream for reading and writing.
-			NetworkStream stream = client.GetStream();
+			NetworkStream stream = tcpClient.GetStream();
 
 			Byte[] data = System.Text.Encoding.ASCII.GetBytes(message + "%");
 			stream.Write(data, 0, data.Length);
@@ -352,6 +376,23 @@ public partial class MainPage : ContentPage
 		}
 
 		status = await Permissions.RequestAsync<Permissions.LocationAlways>();
+
+		return status == PermissionStatus.Granted;
+	}
+
+	private async Task<bool> CheckForNetworkPermission()
+	{
+		var status = await Permissions.CheckStatusAsync<Permissions.NetworkState>();
+
+		if (status == PermissionStatus.Granted)
+			return true;
+
+		if (Permissions.ShouldShowRationale<Permissions.NetworkState>())
+		{
+			await Shell.Current.DisplayAlert("Needs permissions", "BECAUSE!!!", "OK");
+		}
+
+		status = await Permissions.RequestAsync<Permissions.NetworkState>();
 
 		return status == PermissionStatus.Granted;
 	}

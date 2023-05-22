@@ -9,16 +9,11 @@ namespace Receiver // Note: actual namespace depends on the project name.
 {
 	internal class Program
 	{
-		static void Main(string[] args)
+		static async Task Main(string[] args)
 		{
-			string ip = "127.0.0.1";
-			int port = 13000;
+			TcpListener listener = new TcpListener(new IPEndPoint(IPAddress.Any, 13000));
 
-
-			IPAddress localAddr = IPAddress.Parse(ip);
-			TcpListener server = new TcpListener(localAddr, port);
-
-			server.Start();
+			listener.Start();
 
 			Byte[] bytes = new Byte[1024];
 
@@ -26,7 +21,7 @@ namespace Receiver // Note: actual namespace depends on the project name.
 
 			while (true) 
 			{
-				using TcpClient client = server.AcceptTcpClient();
+				using TcpClient client = await listener.AcceptTcpClientAsync();
 				NetworkStream stream = client.GetStream();
 
 				string data = "";
@@ -49,7 +44,7 @@ namespace Receiver // Note: actual namespace depends on the project name.
 			string[] splited = message.Split('$');
 			foreach (string s in splited)
 			{
-				string[] splited2 = message.Split('§');
+				string[] splited2 = s.Split('&');
 				files.Add(new Tuple<string,string>(splited2[0], splited2[1]));
 			}
 
@@ -70,7 +65,7 @@ namespace Receiver // Note: actual namespace depends on the project name.
 		{
 			DateTime dateTime = DateTime.Now;
 
-			return dateTime.Year + "." + dateTime.Month + "." + dateTime.Day + "_" + dateTime.Hour + ":" + dateTime.Minute + ":" + dateTime.Second + "_" + dateTime.Millisecond;
+			return dateTime.Year + "." + dateTime.Month + "." + dateTime.Day + "_" + dateTime.Hour + "-" + dateTime.Minute + "-" + dateTime.Second + "_" + dateTime.Millisecond;
 		}
 	}
 }
