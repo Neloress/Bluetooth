@@ -34,7 +34,7 @@ public partial class MainPage : ContentPage
 		receiveY.Text = "0";
 		receiveZ.Text = "0";
 
-		Beacon1Adress.Text = "Nuki_2E217F4d";
+		Beacon1Adress.Text = "Nuki_2E217F4D";
 		Beacon1X.Text = "0";
 		Beacon1Y.Text = "0";
 		Beacon1Z.Text = "0";
@@ -58,7 +58,7 @@ public partial class MainPage : ContentPage
 		Beacon4Z.Text = "0";
 		Beacon4Name.Text = "Petkit";
 
-		Beacon5Adress.Text = "[TV] Samsung 8 Series (55)";
+		Beacon5Adress.Text = "[TV] Samsung 7 Series (55)";
 		Beacon5X.Text = "0";
 		Beacon5Y.Text = "0";
 		Beacon5Z.Text = "0";
