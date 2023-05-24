@@ -34,29 +34,35 @@ public partial class MainPage : ContentPage
 		receiveY.Text = "0";
 		receiveZ.Text = "0";
 
-		Beacon1Adress.Text = "C0:EE:FB:FF:36:17";
+		Beacon1Adress.Text = "Nuki_2E217F4d";
 		Beacon1X.Text = "0";
 		Beacon1Y.Text = "0";
 		Beacon1Z.Text = "0";
-		Beacon1Name.Text = "No Name";
+		Beacon1Name.Text = "Nuki";
 
-		Beacon2Adress.Text = "4C:62:DC:91:A7:15";
+		Beacon2Adress.Text = "ET-2820 Series";
 		Beacon2X.Text = "0";
 		Beacon2Y.Text = "0";
 		Beacon2Z.Text = "0";
-		Beacon2Name.Text = "No Name";
+		Beacon2Name.Text = "Drucker";
 
-		Beacon3Adress.Text = "4C:62:DC:91:A7:15";
+		Beacon3Adress.Text = "Smart Tag";
 		Beacon3X.Text = "0";
 		Beacon3Y.Text = "0";
 		Beacon3Z.Text = "0";
-		Beacon3Name.Text = "No Name";
+		Beacon3Name.Text = "Tag";
 
-		Beacon4Adress.Text = "4C:62:DC:91:A7:15";
+		Beacon4Adress.Text = "Petkit_K3";
 		Beacon4X.Text = "0";
 		Beacon4Y.Text = "0";
 		Beacon4Z.Text = "0";
-		Beacon4Name.Text = "No Name";
+		Beacon4Name.Text = "Petkit";
+
+		Beacon5Adress.Text = "[TV] Samsung 8 Series (55)";
+		Beacon5X.Text = "0";
+		Beacon5Y.Text = "0";
+		Beacon5Z.Text = "0";
+		Beacon5Name.Text = "TV";
 
 		IPpc.Text = "192.168.237.172";
 		Portpc.Text = "13000";
@@ -64,7 +70,7 @@ public partial class MainPage : ContentPage
 
 	private Beacon[] GenerateBeacons()
 	{
-		Beacon[] beacons = new Beacon[4];
+		Beacon[] beacons = new Beacon[5];
 
 		try 
 		{
@@ -103,6 +109,16 @@ public partial class MainPage : ContentPage
 		catch (Exception e)
 		{
 			Status.Text = "Beacon 4: " + e.Message;
+			return null;
+		}
+
+		try
+		{
+			beacons[4] = new Beacon(Beacon5Adress.Text, Beacon5X.Text, Beacon5Y.Text, Beacon5Z.Text, Beacon5Name.Text);
+		}
+		catch (Exception e)
+		{
+			Status.Text = "Beacon 5: " + e.Message;
 			return null;
 		}
 
@@ -181,7 +197,7 @@ public partial class MainPage : ContentPage
 			sw.WriteLine("ScanTime: " + scanTime);
 			sw.WriteLine("ReceiverPos: " + X.ToString(CultureInfo.InvariantCulture)+ " "+Y.ToString(CultureInfo.InvariantCulture)+ " "+Z.ToString(CultureInfo.InvariantCulture));
 			sw.WriteLine();
-			sw.WriteLine("Time;" + beacons[0].ToString()+";" + beacons[1].ToString() + ";" + beacons[2].ToString());
+			sw.WriteLine("Time;" + beacons[0].ToString()+";" + beacons[1].ToString() + ";" + beacons[2].ToString()+ ";" + beacons[3].ToString());
 			for (int i = 0; i < steps; i++)
 			{
 				deviceList.Clear();
@@ -196,19 +212,20 @@ public partial class MainPage : ContentPage
 	private string GetRow(List<IDevice> deviceList, Beacon[] beacons)
 	{
 		string row = GetTimeStamp()+";";
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 5; i++)
 		{ 
 			Beacon beacon = beacons[i];
 			bool found = false;
-			int rssi = 0;
+			int rssi = int.MinValue;
 			foreach (IDevice device in deviceList)
 			{
 				object obj = device.NativeDevice;
 				PropertyInfo propInfo = obj.GetType().GetProperty("Address");
 				string address = (string)propInfo.GetValue(obj, null);
-				if (address == beacon.Address)
+				if (address == beacon.AddressOrName || (device.Name!=null && device.Name.Contains(beacon.AddressOrName)))
 				{
-					rssi = device.Rssi;
+					if(device.Rssi>rssi)
+						rssi = device.Rssi;
 					found = true;
 				}
 			}

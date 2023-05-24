@@ -10,23 +10,23 @@ namespace AndroidBluetooth
 	internal class Beacon
 	{
 		internal Vector Pos { get; private set; }
-		internal string Address { get; private set; }
+		internal string AddressOrName { get; private set; }
 		internal string Name { get; private set; }
 		internal Beacon(Vector pos, string address, string name)
 		{ 
 			Pos = pos;
-			Address = address;
+			AddressOrName = address;
 			Name = name;
 		}
 		internal Beacon(string address, string x, string y, string z, string name) 
 		{
-			if (address.Length != 17)
-				throw new ArgumentException("Mac address is wrong");
+			//if (address.Length != 17)
+			//	throw new ArgumentException("Mac address is wrong");
 
-			if(address.Split(':').Length!=6)
-				throw new ArgumentException("Mac address is wrong");
+			//if(address.Split(':').Length!=6)
+			//	throw new ArgumentException("Mac address is wrong");
 
-			Address = address;
+			AddressOrName = address;
 
 			Pos = new Vector();
 
@@ -49,7 +49,7 @@ namespace AndroidBluetooth
 		}
 		public override string ToString()
 		{
-			return Address+"_"+Pos.X.ToString(CultureInfo.InvariantCulture) +"_"+ Pos.Y.ToString(CultureInfo.InvariantCulture) + "_"+ Pos.Z.ToString(CultureInfo.InvariantCulture) + "_"+Name;
+			return AddressOrName+"_"+Pos.X.ToString(CultureInfo.InvariantCulture) +"_"+ Pos.Y.ToString(CultureInfo.InvariantCulture) + "_"+ Pos.Z.ToString(CultureInfo.InvariantCulture) + "_"+Name;
 		}
 	}
 }

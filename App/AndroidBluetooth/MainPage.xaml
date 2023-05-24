@@ -14,7 +14,7 @@
                 HorizontalOptions="Fill">
 
                 <Entry x:Name="Beacon1Adress"
-                    Placeholder="MacAddress"
+                    Placeholder="Name/MacAddress"
                        WidthRequest="100"/>
 
                 <Entry x:Name="Beacon1X"
@@ -38,7 +38,7 @@
                 HorizontalOptions="Fill">
 
                 <Entry x:Name="Beacon2Adress"
-                    Placeholder="MacAddress"
+                    Placeholder="Name/MacAddress"
                        WidthRequest="100"/>
 
                 <Entry x:Name="Beacon2X"
@@ -62,7 +62,7 @@
                 HorizontalOptions="Fill">
 
                 <Entry x:Name="Beacon3Adress"
-                    Placeholder="MacAddress"
+                    Placeholder="Name/MacAddress"
                        WidthRequest="100"/>
 
                 <Entry x:Name="Beacon3X"
@@ -86,7 +86,7 @@
                 HorizontalOptions="Fill">
 
                 <Entry x:Name="Beacon4Adress"
-                    Placeholder="MacAddress"
+                    Placeholder="Name/MacAddress"
                        WidthRequest="100"/>
 
                 <Entry x:Name="Beacon4X"
@@ -99,6 +99,30 @@
                     Placeholder="Z"/>
 
                 <Entry x:Name="Beacon4Name"
+                    Placeholder="Name"/>
+
+
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout
+                 Spacing="10"
+                Padding="10,0"
+                HorizontalOptions="Fill">
+
+                <Entry x:Name="Beacon5Adress"
+                    Placeholder="Name/MacAddress"
+                       WidthRequest="100"/>
+
+                <Entry x:Name="Beacon5X"
+                    Placeholder="X"/>
+
+                <Entry x:Name="Beacon5Y"
+                    Placeholder="Y"/>
+
+                <Entry x:Name="Beacon5Z"
+                    Placeholder="Z"/>
+
+                <Entry x:Name="Beacon5Name"
                     Placeholder="Name"/>
 
 
