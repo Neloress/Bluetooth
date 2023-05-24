@@ -197,7 +197,7 @@ public partial class MainPage : ContentPage
 			sw.WriteLine("ScanTime: " + scanTime);
 			sw.WriteLine("ReceiverPos: " + X.ToString(CultureInfo.InvariantCulture)+ " "+Y.ToString(CultureInfo.InvariantCulture)+ " "+Z.ToString(CultureInfo.InvariantCulture));
 			sw.WriteLine();
-			sw.WriteLine("Time;" + beacons[0].ToString()+";" + beacons[1].ToString() + ";" + beacons[2].ToString()+ ";" + beacons[3].ToString());
+			sw.WriteLine("Time;" + beacons[0].ToString()+";" + beacons[1].ToString() + ";" + beacons[2].ToString()+ ";" + beacons[3].ToString() + ";" + beacons[4].ToString());
 			for (int i = 0; i < steps; i++)
 			{
 				deviceList.Clear();

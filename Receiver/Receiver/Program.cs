@@ -54,6 +54,8 @@ namespace Receiver // Note: actual namespace depends on the project name.
 			foreach (Tuple<string, string> tuple in files)
 			{
 				string path = Path.Combine(dir, tuple.Item1);
+
+				path = path.Replace(":", "-");
 				using (StreamWriter sw = File.CreateText(path))
 				{
 					sw.Write(tuple.Item2);
