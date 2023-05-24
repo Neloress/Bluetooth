@@ -28,40 +28,40 @@ public partial class MainPage : ContentPage
 
 	private void InitValues()
 	{
-		ScanTime.Text = "10000";
-		MeasureTime.Text = "1";
+		ScanTime.Text = "5432";
+		MeasureTime.Text = "10";
 		receiveX.Text = "0";
 		receiveY.Text = "0";
 		receiveZ.Text = "0";
 
 		Beacon1Adress.Text = "Nuki_2E217F4D";
-		Beacon1X.Text = "0";
-		Beacon1Y.Text = "0";
-		Beacon1Z.Text = "0";
+		Beacon1X.Text = "744";
+		Beacon1Y.Text = "653";
+		Beacon1Z.Text = "92";
 		Beacon1Name.Text = "Nuki";
 
 		Beacon2Adress.Text = "ET-2820 Series";
-		Beacon2X.Text = "0";
-		Beacon2Y.Text = "0";
-		Beacon2Z.Text = "0";
+		Beacon2X.Text = "1042";
+		Beacon2Y.Text = "151";
+		Beacon2Z.Text = "77";
 		Beacon2Name.Text = "Drucker";
 
 		Beacon3Adress.Text = "Smart Tag";
-		Beacon3X.Text = "0";
-		Beacon3Y.Text = "0";
-		Beacon3Z.Text = "0";
+		Beacon3X.Text = "168";
+		Beacon3Y.Text = "982";
+		Beacon3Z.Text = "173";
 		Beacon3Name.Text = "Tag";
 
 		Beacon4Adress.Text = "Petkit_K3";
-		Beacon4X.Text = "0";
-		Beacon4Y.Text = "0";
-		Beacon4Z.Text = "0";
+		Beacon4X.Text = "477";
+		Beacon4Y.Text = "422";
+		Beacon4Z.Text = "27";
 		Beacon4Name.Text = "Petkit";
 
 		Beacon5Adress.Text = "[TV] Samsung 7 Series (55)";
-		Beacon5X.Text = "0";
-		Beacon5Y.Text = "0";
-		Beacon5Z.Text = "0";
+		Beacon5X.Text = "9";
+		Beacon5Y.Text = "253";
+		Beacon5Z.Text = "106";
 		Beacon5Name.Text = "TV";
 
 		IPpc.Text = "192.168.237.172";
