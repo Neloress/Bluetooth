@@ -1,0 +1,7 @@
+Nuki_2E217F4D_723_635_92_Nuki = b1
+ET-2820 Series_1003_150_78_Drucker = b2
+Smart Tag_167_950_173_Tag = b3
+Petkit_K3_484_411_26_Petkit = b4
+[TV] Samsung 7 Series (55)_9_253_106_TV = b5
+
+Alle angaben in cm

@@ -35,27 +35,27 @@ public partial class MainPage : ContentPage
 		receiveZ.Text = "0";
 
 		Beacon1Adress.Text = "Nuki_2E217F4D";
-		Beacon1X.Text = "744";
-		Beacon1Y.Text = "653";
+		Beacon1X.Text = "723";
+		Beacon1Y.Text = "635";
 		Beacon1Z.Text = "92";
 		Beacon1Name.Text = "Nuki";
 
 		Beacon2Adress.Text = "ET-2820 Series";
-		Beacon2X.Text = "1042";
-		Beacon2Y.Text = "151";
-		Beacon2Z.Text = "77";
+		Beacon2X.Text = "1003";
+		Beacon2Y.Text = "150";
+		Beacon2Z.Text = "78";
 		Beacon2Name.Text = "Drucker";
 
 		Beacon3Adress.Text = "Smart Tag";
-		Beacon3X.Text = "168";
-		Beacon3Y.Text = "982";
+		Beacon3X.Text = "167";
+		Beacon3Y.Text = "950";
 		Beacon3Z.Text = "173";
 		Beacon3Name.Text = "Tag";
 
 		Beacon4Adress.Text = "Petkit_K3";
-		Beacon4X.Text = "477";
-		Beacon4Y.Text = "422";
-		Beacon4Z.Text = "27";
+		Beacon4X.Text = "484";
+		Beacon4Y.Text = "411";
+		Beacon4Z.Text = "26";
 		Beacon4Name.Text = "Petkit";
 
 		Beacon5Adress.Text = "[TV] Samsung 7 Series (55)";
