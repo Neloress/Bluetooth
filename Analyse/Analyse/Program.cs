@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Analyse
 {
@@ -26,6 +27,35 @@ namespace Analyse
 			list.Add(new Measurment(@"C:\Uni_zeug\ss23\IOT\Measurements\H_2023.5.24_23-21-58_988__data.csv", "H", b1, b2, b3, b4, b5));
 			list.Add(new Measurment(@"C:\Uni_zeug\ss23\IOT\Measurements\I_2023.5.24_23-33-24_307__data.csv", "I", b1, b2, b3, b4, b5));
 			list.Add(new Measurment(@"C:\Uni_zeug\ss23\IOT\Measurements\J_2023.5.24_23-44-35_834__data.csv", "J", b1, b2, b3, b4, b5));
+
+			foreach (Measurment measurment in list)
+			{
+				measurment.CalculateValues();
+			}
+
+			List<string> names = new List<string>();
+			names.Add("b1: Nuki");
+			names.Add("b2: Printer");
+			names.Add("b3: SmartTag");
+			names.Add("b4: Petkit");
+			names.Add("b5: TV");
+
+			List<string> file = new List<string>();
+			for (int i = 0; i < 5; i++)
+			{
+				file.Add("New Measurment");
+				file.Add(names[i]);
+				file.Add("Location;Distance;RSSI_Median;RSSI_Average;RSSI_Mean_Deviation;Strength_Median;Strength_Average;Strength_Mean_Deviation");
+				foreach (Measurment m in list)
+				{
+					file.Add(m.Name + ";" + m.Values[i].Distance +";"+ m.Values[i].MedianRSSI + ";" + m.Values[i].AverageRSSI+";"+ m.Values[i].MeanDeviationRSSI + ";" + m.Values[i].MedianStrength + ";" + m.Values[i].AverageStrength+";"+ m.Values[i].MeanDeviationStrength);
+				}
+				file.Add("");
+				file.Add("");
+				file.Add("");
+			}
+
+			File.WriteAllLines(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp.csv",file.ToArray());
 		}
 	}
 }

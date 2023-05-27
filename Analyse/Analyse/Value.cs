@@ -35,7 +35,7 @@ namespace Analyse
 			int milisecond = int.Parse(time.Split('_')[2]);
 
 			Time = new DateTime(year,month,day,hour,minute,second,milisecond);
-			Strength  = TODO;
+			Strength = Math.Pow(10.0, (double)RSSI/10.0);
 		}
 	}
 }

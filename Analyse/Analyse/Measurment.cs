@@ -43,7 +43,13 @@ namespace Analyse
 				Values[3].Values.Add(new Value(temp3[4], temp3[0]));
 				Values[4].Values.Add(new Value(temp3[5], temp3[0]));
 			}
-
+		}
+		internal void CalculateValues()
+		{
+			foreach (BeaconMeasurments beacon in Values)
+			{
+				beacon.CalculateValues();
+			}
 		}
 	}
 }
