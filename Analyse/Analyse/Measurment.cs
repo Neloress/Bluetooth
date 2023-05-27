@@ -13,7 +13,7 @@ namespace Analyse
 		internal double Z { get; private set; }
 		internal string Name { get; private set; }
 		internal double ScanTime { get; private set; }
-		internal List<Value>[] Values { get; private set; }
+		internal BeaconMeasurments[] Values { get; private set; }
 		internal Measurment(string path, string name, Beacon b1, Beacon b2, Beacon b3, Beacon b4, Beacon b5)
 		{
 			Name = name;
@@ -26,19 +26,22 @@ namespace Analyse
 			Y = double.Parse(temp1[2]);
 			Z = double.Parse(temp1[3]);
 
-			Values = new List<Value>[5];
-			for (int i = 0; i < 5; i++)
-				Values[i] = new List<Value>();
+			Values = new BeaconMeasurments[5];
+			Values[0] = new BeaconMeasurments(X, Y, Z, b1);
+			Values[1] = new BeaconMeasurments(X, Y, Z, b2);
+			Values[2] = new BeaconMeasurments(X, Y, Z, b3);
+			Values[3] = new BeaconMeasurments(X, Y, Z, b4);
+			Values[4] = new BeaconMeasurments(X, Y, Z, b5);
 
-			for (int i = 4; i < lines.Count(); i++)
+			for (int i = 4; i < lines.Count() - 1; i++)
 			{
 				string temp2 = lines[i];
 				string[] temp3 = temp2.Split(';');
-				Values[0].Add(new Value(temp3[1], temp3[0], b1));
-				Values[1].Add(new Value(temp3[2], temp3[0], b2));
-				Values[2].Add(new Value(temp3[3], temp3[0], b3));
-				Values[3].Add(new Value(temp3[4], temp3[0], b4));
-				Values[4].Add(new Value(temp3[5], temp3[0], b5));
+				Values[0].Values.Add(new Value(temp3[1], temp3[0]));
+				Values[1].Values.Add(new Value(temp3[2], temp3[0]));
+				Values[2].Values.Add(new Value(temp3[3], temp3[0]));
+				Values[3].Values.Add(new Value(temp3[4], temp3[0]));
+				Values[4].Values.Add(new Value(temp3[5], temp3[0]));
 			}
 
 		}
