@@ -146,10 +146,22 @@ namespace Analyse
 			double Itest2 = Math.Abs(list[8].Values[4].Distance - beacons[4].GetDistance(list[8].Values[4].AverageRSSI));
 
 
+			List<string> rows = new List<string>();
+			rows.Add("Receiver;No weigth;Weighted");
+
+			int n = 1;
 			foreach (Measurment measurment in list)
 			{
-				measurment.CalculatePresicion(beacons, list);
+				measurment.CalculatePresicion(beacons, list,true);
+				double T = measurment.Presicion;
+				measurment.CalculatePresicion(beacons, list, false);
+				double F = measurment.Presicion;
+				rows.Add(n + ";" + F.ToString(CultureInfo.InvariantCulture) + ";" + T.ToString(CultureInfo.InvariantCulture));
+
+				n++;
 			}
+
+			File.WriteAllLines(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp\presicion.csv", rows.ToArray()) ;
 			Console.WriteLine("LOL!");
 		}
 		internal static void Image0(List<Measurment> list)
