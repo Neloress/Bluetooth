@@ -29,7 +29,7 @@ namespace Analyse
 		}
 		internal void CalculateFunction(List<Measurment> measurments,List<Measurment> ignore)
 		{
-			double minMeasuredPower = -100;
+			double minMeasuredPower = 0;//-100;
 			double maxMeasuredPower = 0;
 			double stepMeasuredPower = 0.1;
 			double bestMeasuredPower = -1;
