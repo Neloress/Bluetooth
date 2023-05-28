@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace Analyse
 				Values[4].Values.Add(new Value(temp3[5], temp3[0]));
 			}
 		}
-		internal void CalculatePresicion(List<Beacon> beacons, List<Measurment> measurments,bool useWeights)
+		internal void CalculatePresicion(List<Beacon> beacons, List<Measurment> measurments,Beacon ignore)
 		{
 			List<Tuple<double, double, double, double>> loc = new List<Tuple<double, double, double, double>>();
 
@@ -61,8 +62,11 @@ namespace Analyse
 				{
 					if (Values[i].Source == beacon)
 					{
-						double dis = beacon.GetDistance(Values[i].AverageRSSI);
-						loc.Add(new Tuple<double, double, double, double>(beacon.X, beacon.Y, beacon.Z, dis));
+						if (beacon != ignore)
+						{
+							double dis = beacon.GetDistance(Values[i].AverageRSSI);
+							loc.Add(new Tuple<double, double, double, double>(beacon.X, beacon.Y, beacon.Z, dis));
+						}
 					}
 				}
 			}
@@ -73,16 +77,11 @@ namespace Analyse
 			}
 
 
-			List<double> weights = new List<double> { 1, 1, 1, 1, 1 };
+			Tuple<double, double, double> pos = Trilate(loc,100,-1000,1200,-1000,1100,-100,500);
 
-			if (useWeights)
-				weights = deviations;
-
-			Tuple<double, double, double> pos = Trilate(loc,100,-1000,1200,-1000,1100,-100,500, weights);
-
-			pos = Trilate(loc, 10, pos.Item1-120, pos.Item1+120, pos.Item2 - 120, pos.Item2 + 120, pos.Item3 - 120, pos.Item3 + 120, weights);
-			pos = Trilate(loc, 1, pos.Item1 - 12, pos.Item1 + 12, pos.Item2 - 12, pos.Item2 + 12, pos.Item3 - 12, pos.Item3 + 12, weights);
-			pos = Trilate(loc, 0.1, pos.Item1 - 1.2, pos.Item1 + 1.2, pos.Item2 - 1.2, pos.Item2 + 1.2, pos.Item3 - 1.2, pos.Item3 + 1.2, weights);
+			pos = Trilate(loc, 10, pos.Item1-120, pos.Item1+120, pos.Item2 - 120, pos.Item2 + 120, pos.Item3 - 120, pos.Item3 + 120);
+			pos = Trilate(loc, 1, pos.Item1 - 12, pos.Item1 + 12, pos.Item2 - 12, pos.Item2 + 12, pos.Item3 - 12, pos.Item3 + 12);
+			pos = Trilate(loc, 0.1, pos.Item1 - 1.2, pos.Item1 + 1.2, pos.Item2 - 1.2, pos.Item2 + 1.2, pos.Item3 - 1.2, pos.Item3 + 1.2);
 
 			double x = pos.Item1 - X;
 			double y = pos.Item2 - Y;
@@ -91,7 +90,7 @@ namespace Analyse
 			Presicion = Math.Sqrt(x*x+y*y+z*z);
 
 		}
-		private Tuple<double, double, double> Trilate(List<Tuple<double, double, double, double>> loc, double step, double minX, double maxX, double minY, double maxY, double minZ, double maxZ,List<double> weights)
+		private Tuple<double, double, double> Trilate(List<Tuple<double, double, double, double>> loc, double step, double minX, double maxX, double minY, double maxY, double minZ, double maxZ)
 		{
 			double minDis = double.MaxValue;
 			double xVal = -1;
@@ -111,7 +110,7 @@ namespace Analyse
 							double yT = tuple.Item2 - y;
 							double zT = tuple.Item3 - z;
 							double tempD = Math.Sqrt(xT * xT + yT * yT + zT * zT);
-							dis += Math.Abs(tuple.Item4 - tempD)*weights[i];
+							dis += Math.Abs(tuple.Item4 - tempD);
 							i++;
 						}
 						if (dis < minDis)

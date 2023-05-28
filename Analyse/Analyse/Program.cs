@@ -147,16 +147,36 @@ namespace Analyse
 
 
 			List<string> rows = new List<string>();
-			rows.Add("Receiver;No weigth;Weighted");
+			rows.Add("Receiver;All;2345;1345;1245;1235;1234");
 
 			int n = 1;
 			foreach (Measurment measurment in list)
 			{
-				measurment.CalculatePresicion(beacons, list,true);
-				double T = measurment.Presicion;
-				measurment.CalculatePresicion(beacons, list, false);
-				double F = measurment.Presicion;
-				rows.Add(n + ";" + F.ToString(CultureInfo.InvariantCulture) + ";" + T.ToString(CultureInfo.InvariantCulture));
+				measurment.CalculatePresicion(beacons, list,null);
+				double All = measurment.Presicion;
+
+				measurment.CalculatePresicion(beacons, list, beacons[0]);
+				double v2345 = measurment.Presicion;
+
+				measurment.CalculatePresicion(beacons, list, beacons[1]);
+				double v1345 = measurment.Presicion;
+
+				measurment.CalculatePresicion(beacons, list, beacons[2]);
+				double v1245 = measurment.Presicion;
+
+				measurment.CalculatePresicion(beacons, list, beacons[3]);
+				double v1235 = measurment.Presicion;
+
+				measurment.CalculatePresicion(beacons, list, beacons[4]);
+				double v1234 = measurment.Presicion;
+
+				rows.Add(n + ";" + 
+					All.ToString(CultureInfo.InvariantCulture) + ";" +
+					v2345.ToString(CultureInfo.InvariantCulture)+ ";"+
+					v1345.ToString(CultureInfo.InvariantCulture) + ";" +
+					v1245.ToString(CultureInfo.InvariantCulture) + ";" +
+					v1235.ToString(CultureInfo.InvariantCulture) + ";" +
+					v1234.ToString(CultureInfo.InvariantCulture));
 
 				n++;
 			}
