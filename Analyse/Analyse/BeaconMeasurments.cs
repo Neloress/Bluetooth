@@ -23,6 +23,7 @@ namespace Analyse
 			Source = source;
 			Distance = Math.Sqrt((x-source.X)* (x - source.X) + (y - source.Y) * (y - source.Y) + (z - source.Z) * (z - source.Z));
 		}
+		
 		internal void CalculateValues()
 		{
 			int count = 0;

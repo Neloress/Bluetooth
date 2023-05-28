@@ -16,6 +16,12 @@ namespace Analyse
 			Beacon b3 = new Beacon("b3",167,950,173);
 			Beacon b4 = new Beacon("b4",484,411,26);
 			Beacon b5 = new Beacon("b5",9,253,106);
+			List<Beacon> beacons = new List<Beacon>();
+			beacons.Add(b1); 
+			beacons.Add(b2); 
+			beacons.Add(b3); 
+			beacons.Add(b4);
+			beacons.Add(b5);
 
 			list.Add(new Measurment(@"C:\Uni_zeug\ss23\IOT\Measurements\A_2023.5.24_21-49-10_94__data.csv", "A", b1, b2, b3, b4, b5));
 			list.Add(new Measurment(@"C:\Uni_zeug\ss23\IOT\Measurements\B_2023.5.24_22-1-31_266__data.csv", "B", b1, b2, b3, b4, b5));
@@ -34,11 +40,11 @@ namespace Analyse
 			}
 
 			List<string> names = new List<string>();
-			names.Add("b1: Nuki");
-			names.Add("b2: Printer");
-			names.Add("b3: SmartTag");
-			names.Add("b4: Petkit");
-			names.Add("b5: TV");
+			names.Add("b1_Nuki");
+			names.Add("b2_Printer");
+			names.Add("b3_SmartTag");
+			names.Add("b4_Petkit");
+			names.Add("b5_TV");
 
 			List<string> file = new List<string>();
 			for (int i = 0; i < 5; i++)
@@ -55,7 +61,52 @@ namespace Analyse
 				file.Add("");
 			}
 
-			File.WriteAllLines(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp.csv",file.ToArray());
+			File.WriteAllLines(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp\Temp.csv",file.ToArray());
+
+			for (int i = 0; i < 5; i++)
+			{
+				beacons[i].CalculateFunction(list,new List<Measurment>());
+
+				var plt = new ScottPlot.Plot(1000, 800);
+				plt.YAxis.AxisLabel.Label = "Distance in cm";
+				plt.XAxis.AxisLabel.Label = "RSSI in dBm";
+
+				plt.XAxis.SetBoundary(-100,0);
+				plt.YAxis.SetBoundary(0, 1300);
+				//plt.AddPoint(0,1300);
+
+				List<double> xs = new List<double>();
+				List<double> ys = new List<double>();
+				for (double n = 0; n >= -100; n-=1)
+				{
+					//if (beacons[i].GetDistance(n) <= 1300)
+					//{
+						xs.Add(n);
+						ys.Add(beacons[i].GetDistance(n));
+					//}
+				}
+
+				plt.AddScatter(xs.ToArray(), ys.ToArray());
+
+				foreach (Measurment m in list)
+				{
+					//xs.Add(m.Values[i].Distance);
+					//ys.Add(m.Values[i].AverageRSSI);
+					plt.AddPoint(m.Values[i].AverageRSSI, m.Values[i].Distance);
+				}
+
+				//var plt = new ScottPlot.Plot(400, 300);
+				//plt.AddPoint(,);
+				//plt.AddScatter(xs.ToArray(), ys.ToArray());
+				string s = @"C:\Uni_zeug\ss23\IOT\Measurements\Temp\" + names[i] + "_Deviation_"+beacons[i].Diviation + "plot.png";
+				plt.SaveFig(s);
+			}
+
+			foreach (Measurment measurment in list)
+			{
+				measurment.CalculatePresicion(beacons,list);
+			}
+			Console.WriteLine("LOL!");
 		}
 	}
 }

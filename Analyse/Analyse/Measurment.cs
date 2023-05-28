@@ -44,6 +44,24 @@ namespace Analyse
 				Values[4].Values.Add(new Value(temp3[5], temp3[0]));
 			}
 		}
+		internal void CalculatePresicion(List<Beacon> beacons, List<Measurment> measurments)
+		{
+			List<Tuple<double, double, double, double>> loc = new List<Tuple<double, double, double, double>>();
+			foreach (Beacon beacon in beacons)
+			{
+				beacon.CalculateFunction(measurments,new List<Measurment> {this });
+				for (int i = 0; i < 5; i++)
+				{
+					if (Values[i].Source == beacon)
+					{
+						double dis = beacon.GetDistance(Values[i].AverageRSSI);
+						loc.Add(new Tuple<double, double, double, double>(beacon.X,beacon.Y,beacon.Z,dis));
+					}
+				}
+			}
+
+
+		}
 		internal void CalculateValues()
 		{
 			foreach (BeaconMeasurments beacon in Values)
