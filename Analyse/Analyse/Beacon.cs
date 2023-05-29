@@ -23,9 +23,13 @@ namespace Analyse
 			Y = y;
 			Z = z;
 		}
+		internal static double GetDistanceS(double rssi,double n, double measuredPower)
+		{
+			return Math.Pow(10, (measuredPower - rssi) / (10.0 * n));
+		}
 		internal double GetDistance(double rssi)
-		{ 
-			return Math.Pow(10, (MeasuredPower - rssi) / (10.0 * N));
+		{
+			return GetDistanceS(rssi,N,MeasuredPower);
 		}
 		internal void CalculateFunction(List<Measurment> measurments,List<Measurment> ignore)
 		{

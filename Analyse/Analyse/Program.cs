@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using ScottPlot.Drawing;
 using ScottPlot.Drawing.Colormaps;
 using System;
 using System.Collections.Generic;
@@ -186,33 +187,58 @@ namespace Analyse
 		}
 		internal static void Image0(List<Measurment> list)
 		{
+			List<string> names = new List<string> { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+
 			BeaconMeasurments min = null;
 			BeaconMeasurments max = null;
 			double minV = double.MaxValue;
 			double maxV = double.MinValue;
 
+			string minBeacon = "";
+			string maxBeacon = "";
+			string minReceiver = "";
+			string maxReceiver = "";
+
+			int i1 = 0;
 			foreach (Measurment m in list)
 			{
+				int i2 = 0;
 				foreach (BeaconMeasurments b in m.Values)
 				{
 					if (b.MeanDeviationRSSI<minV)
 					{ 
 						minV = b.MeanDeviationRSSI;
 						min = b;
+
+						minBeacon = b.Source.Name;
+						minReceiver = names[i1];
 					}
 					if (b.MeanDeviationRSSI > maxV)
 					{
 						maxV = b.MeanDeviationRSSI;
 						max = b;
+
+						maxBeacon = b.Source.Name;
+						maxReceiver = names[i1];
 					}
+					i2++;
 				}
+				i1++;
 			}
 			int width = 800;
 			int height = 600;
 
 			var plt = new ScottPlot.Plot(width, height);
-			plt.YAxis.AxisLabel.Label = "RSSI";
+			plt.YAxis.AxisLabel.Label = "RSSI in dBm";
 			plt.XAxis.AxisLabel.Label = "Measurement";
+
+			plt.AddPoint(0, -55, Color.FromArgb(0, 0, 0, 0));
+
+			string s1 = ((double)Math.Round(minV * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture);
+			string s2 = ((double)Math.Round(maxV * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture);
+
+			plt.AddAnnotation("Beacon: "+minBeacon+"\nReceiver: "+minReceiver+"\nMean deviation: "+s1,Alignment.UpperLeft);
+			plt.AddAnnotation("Beacon: " + maxBeacon + "\nReceiver: " + maxReceiver + "\nMean deviation: " + s2, Alignment.LowerLeft);
 
 			//pltMin.XAxis.SetBoundary(-100, 0);
 			//pltMin.YAxis.SetBoundary(0, 1300);
@@ -267,51 +293,51 @@ namespace Analyse
 
 			int width = 400;
 			int height = 300;
-			Font font = new Font("Times New Roman", 10);
+			//Font font = new Font("Times New Roman", 10);
 			Bitmap whole = new Bitmap(width * 2, height * 3);
 			List<Bitmap> images = new List<Bitmap>();
 			for (int i = 0; i < 5; i++)
 			{
 				beacons[i].CalculateFunction(list, new List<Measurment>());
 
+				deviation.Add(((double)Math.Round(beacons[i].Diviation * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
+				N.Add(((double)Math.Round(beacons[i].N * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
+
+				Func<double, double?> func = delegate (double x)
+				{
+					return Beacon.GetDistanceS(x, beacons[i].N, beacons[i].MeasuredPower);
+				};
+			
 				var plt = new ScottPlot.Plot(width, height);
+
 				plt.YAxis.AxisLabel.Label = "Distance in cm";
 				plt.XAxis.AxisLabel.Label = "RSSI in dBm";
 
 				plt.XAxis.SetBoundary(-100, 0);
 				plt.YAxis.SetBoundary(0, 1300);
 
-				//plt.AddPoint(0,1300);
+				plt.AddPoint(-100,1300,Color.FromArgb(0,0,0,0));
+				plt.AddPoint(0, 0, Color.FromArgb(0, 0, 0, 0));
 
-				List<double> xs = new List<double>();
-				List<double> ys = new List<double>();
-				for (double n = 0; n >= -100; n -= 1)
-				{
-					//if (beacons[i].GetDistance(n) <= 1300)
-					//{
-					xs.Add(n);
-					ys.Add(beacons[i].GetDistance(n));
-					//}
-				}
+				string anno = "Beacon: b" + (i + 1) + "\nN: " + N[i] + "\nDeviation: Ø" + deviation[i]+"cm";
+				plt.AddAnnotation(anno, Alignment.UpperRight);
 
-				plt.AddScatter(xs.ToArray(), ys.ToArray());
+				plt.AddFunction(func, Color.FromArgb(31, 118, 180));
 
+				int count = 0;
 				foreach (Measurment m in list)
 				{
-					//xs.Add(m.Values[i].Distance);
-					//ys.Add(m.Values[i].AverageRSSI);
-					plt.AddPoint(m.Values[i].AverageRSSI, m.Values[i].Distance,null,5,ScottPlot.MarkerShape.filledCircle,"higfdhdfghdfgh");
+					Color color = plt.GetNextColor();
+					plt.AddText(names[count], m.Values[i].AverageRSSI, m.Values[i].Distance,12,color);
+					plt.AddPoint(m.Values[i].AverageRSSI, m.Values[i].Distance,color);
+					count++;
 				}
 
-				//var plt = new ScottPlot.Plot(400, 300);
-				//plt.AddPoint(,);
-				//plt.AddScatter(xs.ToArray(), ys.ToArray());
 				string s = @"C:\Uni_zeug\ss23\IOT\Measurements\Temp\Remove\" + i + ".png";
 				plt.SaveFig(s);
 				images.Add(new Bitmap(s));
 
-				deviation.Add(((double)Math.Round(beacons[i].Diviation * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
-				N.Add(((double)Math.Round(beacons[i].N * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
+				
 			}
 
 			using (Graphics g = Graphics.FromImage(whole))
@@ -354,7 +380,7 @@ namespace Analyse
 				s += "b5: N=" + N[4] + "\n";
 				s += "   Ø Deviation=" + deviation[4] + "cm\n";
 				s += "\n";
-				g.DrawString(s, font, new SolidBrush(Color.Black), new PointF(width + 10, 2 * height + 10));
+				//g.DrawString(s, new System.Drawing.Font("Times New Roman", 10), new SolidBrush(Color.Black), new PointF(width + 10, 2 * height + 10));
 			}
 			whole.Save(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp\result1.png");
 		}
@@ -366,13 +392,21 @@ namespace Analyse
 
 			int width = 400;
 			int height = 300;
-			Font font = new Font("Times New Roman", 10);
+			//Font font = new Font("Times New Roman", 10);
 			Bitmap whole = new Bitmap(width * 2, height);
 			List<Bitmap> images = new List<Bitmap>();
 			for (int i = 0; i < 5; i++)
 			{
 				List<Measurment> ign = new List<Measurment> { list[4], list[5], list[6], list[7], list[9] };
 				beacons[i].CalculateFunction(list, ign);
+
+				deviation.Add(((double)Math.Round(beacons[i].Diviation * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
+				N.Add(((double)Math.Round(beacons[i].N * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
+
+				Func<double, double?> func = delegate (double x)
+				{
+					return Beacon.GetDistanceS(x, beacons[i].N, beacons[i].MeasuredPower);
+				};
 
 				var plt = new ScottPlot.Plot(width, height);
 				plt.YAxis.AxisLabel.Label = "Distance in cm";
@@ -381,21 +415,15 @@ namespace Analyse
 				plt.XAxis.SetBoundary(-100, 0);
 				plt.YAxis.SetBoundary(0, 1300);
 
-				//plt.AddPoint(0,1300);
+				plt.AddPoint(-100, 1300, Color.FromArgb(0, 0, 0, 0));
+				plt.AddPoint(0, 0, Color.FromArgb(0, 0, 0, 0));
 
-				List<double> xs = new List<double>();
-				List<double> ys = new List<double>();
-				for (double n = 0; n >= -100; n -= 1)
-				{
-					//if (beacons[i].GetDistance(n) <= 1300)
-					//{
-					xs.Add(n);
-					ys.Add(beacons[i].GetDistance(n));
-					//}
-				}
+				string anno = "Beacon: b" + (i + 1) + "\nN: " +N[i]+ "\nDeviation: Ø"+deviation[i]+"cm";
+				plt.AddAnnotation(anno, Alignment.UpperRight);
 
-				plt.AddScatter(xs.ToArray(), ys.ToArray());
+				plt.AddFunction(func, Color.FromArgb(31, 118, 180));
 
+				int count = 0;
 				foreach (Measurment m in list)
 				{
 					bool found = false;
@@ -405,9 +433,14 @@ namespace Analyse
 
 					//xs.Add(m.Values[i].Distance);
 					//ys.Add(m.Values[i].AverageRSSI);
-					if(!found)
-						plt.AddPoint(m.Values[i].AverageRSSI, m.Values[i].Distance, null, 5, ScottPlot.MarkerShape.filledCircle, "higfdhdfghdfgh");
-				}
+					Color color = plt.GetNextColor();
+					if (!found)
+					{
+						
+						plt.AddText(names[count], m.Values[i].AverageRSSI, m.Values[i].Distance, 12, color);
+						plt.AddPoint(m.Values[i].AverageRSSI, m.Values[i].Distance, color);
+						count++;
+					}}
 
 				//var plt = new ScottPlot.Plot(400, 300);
 				//plt.AddPoint(,);
@@ -416,8 +449,7 @@ namespace Analyse
 				plt.SaveFig(s);
 				images.Add(new Bitmap(s));
 
-				deviation.Add(((double)Math.Round(beacons[i].Diviation * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
-				N.Add(((double)Math.Round(beacons[i].N * 100.0) / 100.0).ToString(CultureInfo.InvariantCulture));
+				
 			}
 
 			using (Graphics g = Graphics.FromImage(whole))
