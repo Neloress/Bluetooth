@@ -77,11 +77,11 @@ namespace Analyse
 			}
 
 
-			Tuple<double, double, double> pos = Trilate(loc,100,-1000,1200,-1000,1100,-100,500);
+			Tuple<double, double, double> pos = Trilate(loc, 1, -1000, 1200, -1000, 1100, -100, 500);//Trilate(loc,100,-1000,1200,-1000,1100,-100,500);
 
-			pos = Trilate(loc, 10, pos.Item1-120, pos.Item1+120, pos.Item2 - 120, pos.Item2 + 120, pos.Item3 - 120, pos.Item3 + 120);
-			pos = Trilate(loc, 1, pos.Item1 - 12, pos.Item1 + 12, pos.Item2 - 12, pos.Item2 + 12, pos.Item3 - 12, pos.Item3 + 12);
-			pos = Trilate(loc, 0.1, pos.Item1 - 1.2, pos.Item1 + 1.2, pos.Item2 - 1.2, pos.Item2 + 1.2, pos.Item3 - 1.2, pos.Item3 + 1.2);
+			//pos = Trilate(loc, 10, pos.Item1-120, pos.Item1+120, pos.Item2 - 120, pos.Item2 + 120, pos.Item3 - 120, pos.Item3 + 120);
+			//pos = Trilate(loc, 1, pos.Item1 - 12, pos.Item1 + 12, pos.Item2 - 12, pos.Item2 + 12, pos.Item3 - 12, pos.Item3 + 12);
+			//pos = Trilate(loc, 0.1, pos.Item1 - 1.2, pos.Item1 + 1.2, pos.Item2 - 1.2, pos.Item2 + 1.2, pos.Item3 - 1.2, pos.Item3 + 1.2);
 
 			double x = pos.Item1 - X;
 			double y = pos.Item2 - Y;
@@ -96,6 +96,8 @@ namespace Analyse
 			double xVal = -1;
 			double yVal = -1;
 			double zVal = -1;
+			double whole = ((maxX-minX)/step) * ((maxY-minY)/step) * ((maxZ-minZ)/step);
+			double count = 0;
 			for (double x = minX; x <= maxX; x += step)
 			{
 				for (double y = minY; y <= maxY; y += step)
@@ -120,6 +122,15 @@ namespace Analyse
 							yVal = y;
 							zVal = z;
 						}
+
+						if (count%1000000 == 0)
+						{
+							double prog = count / whole;
+
+							Console.WriteLine(prog);
+						}
+
+						count++;
 					}
 				}
 			}
