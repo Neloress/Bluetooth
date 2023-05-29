@@ -77,7 +77,9 @@ namespace Analyse
 			}
 
 
-			Tuple<double, double, double> pos = Trilate(loc, 1, -1000, 1200, -1000, 1100, -100, 500);//Trilate(loc,100,-1000,1200,-1000,1100,-100,500);
+			//Tuple<double, double, double> pos = Trilate(loc, 1, -1000, 1200, -1000, 1100, -100, 500);
+
+			Tuple<double, double, double> pos = Trilate(loc, 1, -1000, 2100, -1000, 2000, -1000, 1300);//Trilate(loc,100,-1000,1200,-1000,1100,-100,500);
 
 			//pos = Trilate(loc, 10, pos.Item1-120, pos.Item1+120, pos.Item2 - 120, pos.Item2 + 120, pos.Item3 - 120, pos.Item3 + 120);
 			//pos = Trilate(loc, 1, pos.Item1 - 12, pos.Item1 + 12, pos.Item2 - 12, pos.Item2 + 12, pos.Item3 - 12, pos.Item3 + 12);
