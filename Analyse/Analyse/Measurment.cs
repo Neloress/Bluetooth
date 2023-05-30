@@ -102,49 +102,64 @@ namespace Analyse
 			double step = 1;
 
 
-			double rangeX = maxX - minX;
-			double xTest = Math.Round(rangeX / 12.0);
-			List<Thread> threads = new List<Thread>();
-			Results = new List<Tuple<double, double, double,double>>();
-			for (int i = 0; i < 12; i++)
-			{
-				Results.Add(new Tuple<double, double, double,double>(0,0,0,0));
-				int index = i*2-i;
-				double maxXt = minX + (double)(index + 1) * xTest + step;
-				if (i == 1)
-					maxXt = maxX;
-				Thread thread = new Thread(() => Trilate(listList[index], step, minX+(double)index * xTest-step, maxXt, minY, maxY, minZ, maxZ,index));
-				threads.Add(thread);
-				thread.Start();
-			}
+			//double rangeX = maxX - minX;
+			//double xTest = Math.Round(rangeX / 12.0);
+			//List<Thread> threads = new List<Thread>();
+			//Results = new List<Tuple<double, double, double,double>>();
+			//for (int i = 0; i < 12; i++)
+			//{
+			//	Results.Add(new Tuple<double, double, double,double>(0,0,0,0));
+			//	int index = i*2-i;
+			//	double maxXt = minX + (double)(index + 1) * xTest + step;
+			//	if (i == 1)
+			//		maxXt = maxX;
+			//	Thread thread = new Thread(() => Trilate(listList[index], step, minX+(double)index * xTest-step, maxXt, minY, maxY, minZ, maxZ,index));
+			//	threads.Add(thread);
+			//	thread.Start();
+			//}
 
 
-			foreach (Thread t in threads)
-			{
-				t.Join();
-			}
+			//foreach (Thread t in threads)
+			//{
+			//	t.Join();
+			//}
 
-			Presicion = double.MaxValue;
-			double dist = double.MaxValue;
-			foreach (Tuple<double, double, double,double> t in Results)
-			{
-				if (t.Item4 < dist)
-				{
-					dist = t.Item4;
-					Xt = t.Item1;
-					Yt = t.Item2;
-					Zt = t.Item3;
+			//Presicion = double.MaxValue;
+			//double dist = double.MaxValue;
+			//foreach (Tuple<double, double, double,double> t in Results)
+			//{
+			//	if (t.Item4 < dist)
+			//	{
+			//		dist = t.Item4;
+			//		Xt = t.Item1;
+			//		Yt = t.Item2;
+			//		Zt = t.Item3;
 
-					double x = t.Item1 - X;
-					double y = t.Item2 - Y;
-					double z = t.Item3 - Z;
+			//		double x = t.Item1 - X;
+			//		double y = t.Item2 - Y;
+			//		double z = t.Item3 - Z;
 
-					Presicion = Math.Sqrt(x * x + y * y + z * z);
-				}
-			}
+			//		Presicion = Math.Sqrt(x * x + y * y + z * z);
+			//	}
+			//}
+
+			Results = new List<Tuple<double, double, double, double>>();
+			Results.Add(new Tuple<double, double, double, double>(0,0,0,0));
+
+			Trilate(listList[0], 10, -1000, 2100, -1000, 2000, -1000, 1300,0);
+
+			Trilate(listList[0],1, Results[0].Item1-100, Results[0].Item1+100, Results[0].Item2-100, Results[0].Item2+100, Results[0].Item3-100, Results[0].Item3+100,0);
 
 
-			//Trilate(loc, 10, -1000, 2100, -1000, 2000, -1000, 1300,0);
+			double x = Results[0].Item1 - X;
+			double y = Results[0].Item2 - Y;
+			double z = Results[0].Item3 - Z;
+
+			Xt = Results[0].Item1;
+			Yt = Results[0].Item2;
+			Zt = Results[0].Item3;
+
+			Presicion = Math.Sqrt(x * x + y * y + z * z);
 
 			//pos = Trilate(loc, 10, pos.Item1-120, pos.Item1+120, pos.Item2 - 120, pos.Item2 + 120, pos.Item3 - 120, pos.Item3 + 120);
 			//pos = Trilate(loc, 1, pos.Item1 - 12, pos.Item1 + 12, pos.Item2 - 12, pos.Item2 + 12, pos.Item3 - 12, pos.Item3 + 12);
