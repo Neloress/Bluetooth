@@ -148,36 +148,77 @@ namespace Analyse
 
 
 			List<string> rows = new List<string>();
-			rows.Add("Receiver;All;2345;1345;1245;1235;1234");
+			rows.Add("Receiver;All;x;y;z;2345;x;y;z;1345;x;y;z;1245;x;y;z;1235;x;y;z;1234;x;y;z");
+
+			//list[9].CalculatePresicion(beacons, list, beacons[0]);
 
 			int n = 1;
 			foreach (Measurment measurment in list)
 			{
+				Console.WriteLine("1");
+				Console.WriteLine(n+":10");
+
 				measurment.CalculatePresicion(beacons, list,null);
-				double All = measurment.Presicion;
+				string All = Math.Round(measurment.Presicion).ToString();
+				All += ";"+Math.Round(measurment.Xt).ToString();
+				All += ";" + Math.Round(measurment.Yt).ToString();
+				All += ";" + Math.Round(measurment.Zt).ToString();
+
+				Console.WriteLine("2");
+				Console.WriteLine(n + ":10");
 
 				measurment.CalculatePresicion(beacons, list, beacons[0]);
-				double v2345 = measurment.Presicion;
+				string v2345 = Math.Round(measurment.Presicion).ToString();
+				v2345 += ";" + Math.Round(measurment.Xt).ToString();
+				v2345 += ";" + Math.Round(measurment.Yt).ToString();
+				v2345 += ";" + Math.Round(measurment.Zt).ToString();
+
+				Console.WriteLine("3");
+				Console.WriteLine(n + ":10");
 
 				measurment.CalculatePresicion(beacons, list, beacons[1]);
-				double v1345 = measurment.Presicion;
+				string v1345 = Math.Round(measurment.Presicion).ToString();
+				v1345 += ";" + Math.Round(measurment.Xt).ToString();
+				v1345 += ";" + Math.Round(measurment.Yt).ToString();
+				v1345 += ";" + Math.Round(measurment.Zt).ToString();
+
+				Console.WriteLine("4");
+				Console.WriteLine(n + ":10");
 
 				measurment.CalculatePresicion(beacons, list, beacons[2]);
-				double v1245 = measurment.Presicion;
+				string v1245 = Math.Round(measurment.Presicion).ToString();
+				v1245 += ";" + Math.Round(measurment.Xt).ToString();
+				v1245 += ";" + Math.Round(measurment.Yt).ToString();
+				v1245 += ";" + Math.Round(measurment.Zt).ToString();
+
+				Console.WriteLine("5");
+				Console.WriteLine(n + ":10");
 
 				measurment.CalculatePresicion(beacons, list, beacons[3]);
-				double v1235 = measurment.Presicion;
+				string v1235 = Math.Round(measurment.Presicion).ToString();
+				v1235 += ";" + Math.Round(measurment.Xt).ToString();
+				v1235 += ";" + Math.Round(measurment.Yt).ToString();
+				v1235 += ";" + Math.Round(measurment.Zt).ToString();
+
+				Console.WriteLine("6");
+				Console.WriteLine(n + ":10");
 
 				measurment.CalculatePresicion(beacons, list, beacons[4]);
-				double v1234 = measurment.Presicion;
+				string v1234 = Math.Round(measurment.Presicion).ToString();
+				v1234 += ";" + Math.Round(measurment.Xt).ToString();
+				v1234 += ";" + Math.Round(measurment.Yt).ToString();
+				v1234 += ";" + Math.Round(measurment.Zt).ToString();
+
+				Console.WriteLine("7");
+				Console.WriteLine(n + ":10");
 
 				rows.Add(n + ";" + 
-					All.ToString(CultureInfo.InvariantCulture) + ";" +
-					v2345.ToString(CultureInfo.InvariantCulture)+ ";"+
-					v1345.ToString(CultureInfo.InvariantCulture) + ";" +
-					v1245.ToString(CultureInfo.InvariantCulture) + ";" +
-					v1235.ToString(CultureInfo.InvariantCulture) + ";" +
-					v1234.ToString(CultureInfo.InvariantCulture));
+					All + ";" +
+					v2345+ ";"+
+					v1345 + ";" +
+					v1245 + ";" +
+					v1235 + ";" +
+					v1234);
 
 				n++;
 			}
