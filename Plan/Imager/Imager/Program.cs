@@ -203,7 +203,21 @@ namespace Imager
 			float fontSize = 20;
 
 			Color[] colors = plt.Palette.GetColors(16);
-			colors[7] = colors[15];
+			colors[0] = Color.FromArgb(148,103,189);
+			colors[1] = Color.FromArgb(227,119,194);
+			colors[2] = Color.FromArgb(188,189,34);
+			colors[3] = Color.FromArgb(31,119,180);
+			colors[4] = Color.FromArgb(44,160,44);
+			colors[5] = Color.FromArgb(148,103,189);
+			colors[6] = Color.FromArgb(227, 119, 194);
+			colors[7] = Color.FromArgb(188, 189, 34);
+			colors[8] = Color.FromArgb(31, 119, 180);
+			colors[9] = Color.FromArgb(44, 160, 44);
+
+			colors[10] = Color.RebeccaPurple;
+
+
+			//colors[7] = colors[15];
 
 			int n = 0;
 			for (int i = 0; i < 10; i++)
