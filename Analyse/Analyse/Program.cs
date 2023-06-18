@@ -298,6 +298,7 @@ namespace Analyse
 			}
 			plt.AddScatter(xsMin.ToArray(), ysMin.ToArray());
 
+
 			//pltMin.SaveFig(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp\result0min.png");
 
 
@@ -324,6 +325,34 @@ namespace Analyse
 			plt.AddScatter(xsMax.ToArray(), ysMax.ToArray());
 
 			plt.SaveFig(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp\result0.png");
+
+			var plt2 = new ScottPlot.Plot(width, height);
+			ScottPlot.Statistics.Histogram hist2 = new ScottPlot.Statistics.Histogram(-100,-50,100);
+
+			hist2.AddRange(ysMax);
+
+			plt2.AddBar(hist2.Counts,hist2.Bins,Color.LightBlue);
+
+			ScottPlot.Statistics.Histogram hist1 = new ScottPlot.Statistics.Histogram(-100, -50, 100);
+
+			hist1.AddRange(ysMin);
+
+			plt2.AddBar(hist1.Counts, hist1.Bins,Color.LightGreen);
+			
+			plt2.AddVerticalLine(max.AverageRSSI,Color.DarkBlue,2.5f,LineStyle.DashDot);
+			plt2.AddVerticalLine(min.AverageRSSI,Color.DarkGreen, 2.5f, LineStyle.DashDot);
+
+			plt2.AddText("Ø RSSI", max.AverageRSSI,51,16,Color.DarkBlue);
+			plt2.AddText("Ø RSSI", min.AverageRSSI, 51, 16, Color.DarkGreen);
+
+			//plt2.AddText("≙~1000cm", -100,3,12,Color.Black);
+
+			plt2.YAxis.Label("Count");
+			plt2.XAxis.Label("RSSI in dBm");
+
+			plt2.SetAxisLimits(yMin: 0);
+
+			plt2.SaveFig(@"C:\Uni_zeug\ss23\IOT\Measurements\Temp\result0_2.png");
 
 		}
 		internal static void Image1(List<Measurment> list, List<Beacon> beacons)
